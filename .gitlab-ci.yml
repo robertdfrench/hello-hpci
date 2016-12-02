@@ -1,0 +1,17 @@
+stages:
+- build
+- test
+
+build:
+  stage: build
+  script:
+  - cc main.c
+  - cp a.out $OLCF_DEPLOYMENT_ROOT/$CI_BUILD_REF_NAME.exe
+
+test:
+  stage: test
+  script:
+  - module load python/3.5.1
+  - module load blocking_qsub
+  - python generate_pbs_script.py --account=$BATCH_ACCOUNT --walltime=$WALLTIME --nodes=$NUM_NODES --deployment_root=$DEPLOYMENT_ROOT --num_ranks=$NUM_RANKS --executable_filename=$CI_BUILD_REF_NAME.exe > $CI_BUILD_REF_NAME.pbs
+  - blocking_qsub $CI_BUILD_REF_NAME.pbs
