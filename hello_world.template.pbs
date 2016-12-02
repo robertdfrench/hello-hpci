@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/bin/bash -l
 #PBS -A {account}
 #PBS -l walltime={walltime}
 #PBS -l nodes={num_nodes}
 #PBS -j oe
 
 cd {deployment_root}
+hostname
 aprun -n {num_ranks} ./{executable_filename}
