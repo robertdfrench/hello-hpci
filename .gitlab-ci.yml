@@ -2,17 +2,39 @@ stages:
 - build
 - test
 
-build:
+build:titan:
   stage: build
   script:
   - module unload xalt
   - cc main.c
-  - cp a.out $OLCF_DEPLOYMENT_ROOT/hello_world.$CI_BUILD_REF_NAME.exe
+  - cp a.out $OLCF_DEPLOYMENT_ROOT/hello_world.$CI_BUILD_REF_NAME.titan.exe
+  tags:
+  - titan
 
-test:
+test:titan:
   stage: test
   script:
   - module load python/3.5.1
   - module load blocking_qsub
-  - python generate_pbs_script.py --account=$BATCH_ACCOUNT --walltime=1800 --num_nodes=4 --deployment_root=$OLCF_DEPLOYMENT_ROOT --num_ranks=64 --executable_filename=hello_world.$CI_BUILD_REF_NAME.exe > $CI_BUILD_REF_NAME.pbs
-  - blocking_qsub -v $CI_BUILD_REF_NAME.pbs
+  - python generate_pbs_script.py --account=$BATCH_ACCOUNT --walltime=1800 --num_nodes=4 --deployment_root=$OLCF_DEPLOYMENT_ROOT --num_ranks=64 --executable_filename=hello_world.$CI_BUILD_REF_NAME.titan.exe > $CI_BUILD_REF_NAME.titan.pbs
+  - blocking_qsub -v $CI_BUILD_REF_NAME.titan.pbs
+  tags:
+  - titan
+
+build:eos:
+  stage: build
+  script:
+  - module unload xalt
+  - cc main.c
+  - cp a.out $OLCF_DEPLOYMENT_ROOT/hello_world.$CI_BUILD_REF_NAME.eos.exe
+  tags:
+  - eos
+
+test:eos:
+  stage: test
+  script:
+  - module load python/3.5.1
+  - python generate_pbs_script.py --account=$BATCH_ACCOUNT --walltime=1800 --num_nodes=4 --deployment_root=$OLCF_DEPLOYMENT_ROOT --num_ranks=64 --executable_filename=hello_world.$CI_BUILD_REF_NAME.eos.exe > $CI_BUILD_REF_NAME.eos.pbs
+  - /sw/xk6/blocking_qsub/0.2.0/python3.5.1/bin/blocking_qsub -v $CI_BUILD_REF_NAME.eos.pbs
+  tags:
+  - eos
