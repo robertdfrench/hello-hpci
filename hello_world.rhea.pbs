@@ -1,0 +1,9 @@
+#!/bin/bash -l
+#PBS -A STF007
+#PBS -l walltime=1800
+#PBS -l nodes=4
+#PBS -j oe
+
+cd $MEMBERWORK/stf007
+hostname
+mpirun -n 64 ./$CI_BUILD_REF_NAME.rhea.pbs
