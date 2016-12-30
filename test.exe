@@ -1,0 +1,8 @@
+#!/bin/bash -ex
+source /sw/xk6/environment-modules/3.2.10.3/sles11.3_gnu4.9.0/init/bash
+cc main.c
+cp a.out $MEMBERWORK/stf007/hello-world.exe
+module unload xalt
+module load python/3.5.1
+module load blocking_qsub
+blocking_qsub hello_world.titan.pbs

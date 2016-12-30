@@ -1,0 +1,9 @@
+#!/bin/bash -l
+#PBS -A STF007
+#PBS -l walltime=1800
+#PBS -l nodes=4
+#PBS -j oe
+
+cd $MEMBERWORK/stf007
+hostname
+aprun -n 64 ./hello-world.exe
